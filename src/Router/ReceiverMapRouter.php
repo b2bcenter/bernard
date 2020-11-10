@@ -55,7 +55,7 @@ class ReceiverMapRouter implements Router
 
         if (null === $receiver) {
             $available_receivers = implode(', ', array_keys($this->receivers));
-            throw new ReceiverNotFoundException('No receiver found with name "'.$envelope->getName().'" by "'.static::class.'". Available: "'.$available_receivers.'".');
+            throw new ReceiverNotFoundException('No receiver found with name "'.$this->getName($envelope).'". Available: "'.var_export($available_receivers, true).'".');
         }
 
         return $receiver;
