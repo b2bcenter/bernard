@@ -42,4 +42,31 @@ class SimpleReceiverResolver implements ReceiverResolver
 
         return new Receiver\CallableReceiver($receiver);
     }
+
+    public function resolveDebug($receiver, Envelope $envelope, &$point = 0)
+    {
+        if (null === $receiver) {
+            $point = 1;
+            return null;
+        }
+
+        if ($receiver instanceof Receiver) {
+            $point = 2;
+            return $receiver;
+        }
+
+        if (is_callable($receiver) == false) {
+            $point = 3;
+            $receiver = [$receiver, lcfirst($envelope->getName())];
+        }
+
+        // Receiver is still not a callable which means it's not a valid receiver.
+        if (is_callable($receiver) == false) {
+            $point = 4;
+            return null;
+        }
+
+        $point = 5;
+        return new Receiver\CallableReceiver($receiver);
+    }
 }

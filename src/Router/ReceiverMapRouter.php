@@ -51,11 +51,10 @@ class ReceiverMapRouter implements Router
     public function route(Envelope $envelope)
     {
         $receiver = $this->get($this->getName($envelope));
-        $receiver = $this->receiverResolver->resolve($receiver, $envelope);
+        $receiver = $this->receiverResolver->resolveDebug($receiver, $envelope, $point);
 
         if (null === $receiver) {
-            $available_receivers = implode(', ', array_keys($this->receivers));
-            throw new ReceiverNotFoundException('No receiver found with name "'.$this->getName($envelope).'". Available: "'.var_export($available_receivers, true).'".');
+            throw new ReceiverNotFoundException('No receiver found with key_name "'.$this->getName($envelope).'" with point "'.$point.'". Available: "'.var_export($this->receivers, true).'".');
         }
 
         return $receiver;
