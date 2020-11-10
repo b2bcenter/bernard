@@ -54,7 +54,8 @@ class ReceiverMapRouter implements Router
         $receiver = $this->receiverResolver->resolve($receiver, $envelope);
 
         if (null === $receiver) {
-            throw new ReceiverNotFoundException(sprintf('No receiver found with name "%s".', $envelope->getName()));
+            $available_receivers = implode(', ', array_keys($this->receivers));
+            throw new ReceiverNotFoundException(sprintf('No receiver found with name "%s". Available: "%s"', $envelope->getName()), (string)$available_receivers);
         }
 
         return $receiver;
